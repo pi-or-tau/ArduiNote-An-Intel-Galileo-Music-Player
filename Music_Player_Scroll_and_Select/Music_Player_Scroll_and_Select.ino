@@ -1,5 +1,5 @@
 #include <Wire.h>
-#include <rgb_lcd.h>
+#include <rgb_lcd.h> //A library from SEED STUDIOS
 
 rgb_lcd lcd; //Initiate "lcd"
 
