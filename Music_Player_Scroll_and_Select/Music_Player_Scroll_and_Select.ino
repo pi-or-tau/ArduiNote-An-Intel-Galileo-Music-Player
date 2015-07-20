@@ -92,11 +92,24 @@ void play_song(int noteList[],float noteLength[]){
     song_last_played = scrollLevel;
     noteIndex = 0;
   }
-    for (; noteIndex < 10000; noteIndex++) {
+  long timeNotePlayed;
+  bool shouldBreak = false;
+  
+  for (; noteIndex < 10000; noteIndex++) {
+    tone(speakerPin, noteList[noteIndex]);
+    timeNotePlayed = millis();
+    while ( (timeNotePlayed - millis() < noteLength[noteIndex]) ){
       if(checkSelect() == true || noteList[noteIndex] == -1){
+        shouldBreak = true;
+        noTone(speakerPin);
         break;
       }
-      tone(speakerPin, noteList[noteIndex], noteLength[noteIndex]);
+    }
+    
+    noTone(speakerPin);
+    if (shouldBreak == true){
+      break;
+    } 
   }
 }
 
