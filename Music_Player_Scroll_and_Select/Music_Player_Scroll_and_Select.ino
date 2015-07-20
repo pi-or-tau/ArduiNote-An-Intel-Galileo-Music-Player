@@ -69,11 +69,6 @@ int checkPot_and_scrollLevel(){      //Return scroll value
   return scrollLevel;
 }
 
-/*int _scroll(){
-  scrollLevel = checkPot();          //Obselete
-  return scrollLevel;
-}*/
-
 bool checkSelect(){
   currentTime = millis();
   buttonPosition = digitalRead(buttonPin);
@@ -93,23 +88,24 @@ void play_song(int noteList[],float noteLength[]){
     noteIndex = 0;
   }
   long timeNotePlayed;
-  bool shouldBreak = false;
+  bool shouldBreak;
   
   for (; noteIndex < 10000; noteIndex++) {
     tone(speakerPin, noteList[noteIndex]);
     timeNotePlayed = millis();
-    while ( (timeNotePlayed - millis() < noteLength[noteIndex]) ){
-      if(checkSelect() == true || noteList[noteIndex] == -1){
+    shouldBreak = false;
+    
+    while (millis() - timeNotePlayed < noteLength[noteIndex]){
+      delay(10);
+      if(checkSelect() == true){
         shouldBreak = true;
-        noTone(speakerPin);
         break;
       }
     }
-    
-    noTone(speakerPin);
     if (shouldBreak == true){
+      noTone(speakerPin);
       break;
-    } 
+    }
   }
 }
 
@@ -139,6 +135,7 @@ int changePlayButton(int state) {    //Changes play and pause button
 
 void setup() {
   Serial.begin(9600);
+  Serial.println("Initializing...");
   pinMode(potPin,INPUT);
   pinMode(buttonPin, INPUT);
   pinMode(speakerPin, OUTPUT);
@@ -153,7 +150,9 @@ void loop() {
   while(checkSelect() == false){
     screenScroll(checkPot_and_scrollLevel());
   }
+  Serial.println("Button pressed!");
   if (scrollLevel == 0){
+    Serial.println("Playing Poker Face...");
     play_song(POKER_FACE_NOTE_LIST,POKER_FACE_NOTE_LENGTHS);
   }
   if(scrollLevel == 1){
