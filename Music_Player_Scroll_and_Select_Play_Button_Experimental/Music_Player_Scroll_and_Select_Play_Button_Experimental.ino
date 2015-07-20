@@ -69,17 +69,11 @@ int checkPot_and_scrollLevel(){      //Return scroll value
   return scrollLevel;
 }
 
-/*int _scroll(){
-  scrollLevel = checkPot();          //Obselete
-  return scrollLevel;
-}*/
-
 bool checkSelect(){
   currentTime = millis();
   buttonPosition = digitalRead(buttonPin);
   if(buttonPosition == true && millis()>= time_since_last_press + debounceTime){
     time_since_last_press = millis();
-    Serial.println(buttonPosition);
     return true;
   }
   else{
@@ -92,15 +86,44 @@ void play_song(int noteList[],float noteLength[]){
     song_last_played = scrollLevel;
     noteIndex = 0;
   }
-    for (; noteIndex < 10000; noteIndex++) {
-      if(checkSelect() == true || noteList[noteIndex] == -1){
-        changePlayButton(1);
+  long timeNotePlayed;
+  bool shouldBreak;
+  
+  for (; noteIndex < 10000; noteIndex++) {
+    tone(speakerPin, noteList[noteIndex]);
+    timeNotePlayed = millis();
+    shouldBreak = false;
+    
+    while (millis() - timeNotePlayed < noteLength[noteIndex]){
+      delay(10);
+      if(checkSelect() == true){
+        shouldBreak = true;
         break;
       }
-      tone(speakerPin, noteList[noteIndex], noteLength[noteIndex]);
+    }
+    if (shouldBreak == true || noteList[noteIndex + 1] == -1){
+      noTone(speakerPin);
+      changePlayButton(0);
+      break;
+    }
   }
 }
 
+/*
+void play_song(int noteList[],float noteLength[]){
+  if(song_last_played != scrollLevel){
+    song_last_played = scrollLevel;
+    noteIndex = 0;
+  }
+    for (; noteIndex < 10000; noteIndex++) {
+      if(checkSelect() == true || noteList[noteIndex] == -1){
+        changePlayButton(0);
+        break;
+      }                                                                    //Will keep for a few versions
+      tone(speakerPin, noteList[noteIndex], noteLength[noteIndex]);
+  }
+}
+*/
 void screenScroll(int scrollLevel) {
     //The if statement is for button. Do not use with potentiometer.    
     lcd.clear();
@@ -109,17 +132,25 @@ void screenScroll(int scrollLevel) {
     lcd.setCursor( (16 - songNames[scrollLevel][0].length() ) / 2 , 0);
     lcd.print(songNames[scrollLevel][0]);
     lcd.setCursor( (16 - songNames[scrollLevel][1].length() ) / 2 , 1);
-    lcd.print(songNames[scrollLevel][1]);                                    //!!!!!!!!!!!!!!!#######Removed changePlayButton()#######!!!!!!!!!!!!!!!
+    lcd.print(songNames[scrollLevel][1]);
+    if(song_last_played == scrollLevel){
+      changePlayButton(0);
+    }
     delay(5);
     }
-
-int changePlayButton(int state) {    //Changes play and pause button
-    state = (state + 1) % 2;
     
-    lcd.setCursor (15,0);
-    lcd.write(byte(state));
-
-    return state;
+void changePlayButton(int state){
+  //state = (state + 1) % 2;
+  if (state == 0){
+    lcd.setCursor(15,0);
+    lcd.write(byte(0)); //Pause Button
+    delay(10);
+    }
+  else if(state == 1){
+    lcd.setCursor(15,0);
+    lcd.write(byte(1)); //Play Button
+    delay(5);
+  }
 }
 
 
@@ -133,7 +164,7 @@ void setup() {
   lcd.createChar(0, pauseButton);
   lcd.createChar(1, playButton);
   screenScroll(checkPot_and_scrollLevel());
-  changePlayButton(1);
+  changePlayButton(0);
   
   
 }
@@ -143,15 +174,15 @@ void loop() {
     screenScroll(checkPot_and_scrollLevel());
   }
   if (scrollLevel == 0){
-    changePlayButton(0);
+    changePlayButton(1);
     play_song(POKER_FACE_NOTE_LIST,POKER_FACE_NOTE_LENGTHS);
   }
   if(scrollLevel == 1){
-    changePlayButton(0);
+    changePlayButton(1);
     play_song(IMPERIAL_MARCH_NOTE_LIST,IMPERIAL_MARCH_NOTE_LENGTHS);
   }
   if(scrollLevel == 2){
-    changePlayButton(0);
+    changePlayButton(1);
     play_song(SUPER_MARIO_BROS_NOTE_LIST,SUPER_MARIO_BROS_NOTE_LENGTHS);
   }
 }
