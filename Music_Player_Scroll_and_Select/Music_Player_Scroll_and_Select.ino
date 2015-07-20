@@ -102,8 +102,9 @@ void play_song(int noteList[],float noteLength[]){
         break;
       }
     }
-    if (shouldBreak == true){
+    if (shouldBreak == true || noteList[noteIndex + 1] == -1){
       noTone(speakerPin);
+      
       break;
     }
   }
