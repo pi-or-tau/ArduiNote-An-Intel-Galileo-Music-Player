@@ -87,7 +87,7 @@ bool checkSelect(){
 }
 
 void play_song(const int noteList[],const float noteLength[]){
-  if(song_last_played != scrollLevel){
+  if(song_last_played != scrollLevel || noteList[noteIndex + 1] == -1){
     song_last_played = scrollLevel;
     noteIndex = 0;
   }
