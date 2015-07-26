@@ -7,3 +7,4 @@ Necessary Libraries:
 
 The frequencies for the songs come from a python program written which converts .MIDI files to frequencies and durations of these frequencies. These .MIDI files are not owned by me and are obtained through:  http://musescore.com
 
+(Please download the .rtf instead of viewing it online, because GitHub cannot open these kinds of files.)
