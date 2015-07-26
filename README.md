@@ -1,4 +1,4 @@
-# Arduino-Galileo-Gen-2---Frequency-Player-With-LCD-Choice-Screen
+# ArduiNote - An Intel Galileo Music Player
 
 Necessary Libraries:
 1. RGB_LCD (from Grove)
