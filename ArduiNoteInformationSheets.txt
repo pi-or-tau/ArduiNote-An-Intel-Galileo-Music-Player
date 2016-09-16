@@ -1,0 +1,22 @@
+﻿How it Works:
+      The songs played by the ArduiNote are each encoded into two lists: a list of frequencies (listed in Hertz), and a list of note lengths (listed in milliseconds), both are which are hardcoded into its software. The ArduiNote’s music player reads through each list from left to right, converting the information into a digital signal that can be sent to either the headphone jack or the built-in piezoelectric buzzer.
+Because the ArduiNote cannot directly read music files, whether they be .mp3’s, .m4a’s, or otherwise, any song that we wanted to play had to be converted from a more common file format into the list format mentioned above. To do this, we wrote a set of Python scripts that could parse .midi files and convert them into an ArduiNote-readable format.
+The ArduiNote is controlled by two buttons (used for play/pause, and to switch between audio outputs) and a potentiometer for scrolling. Its UI was coded in C using the Arduino IDE.
+
+Attributions
+* Initial design direction by Caleb Kao
+* Python .midi conversion Scripts written by Yilin Yang
+* User Interface and music playback co-written by Michael DiFranco, Collin Hamilton, and Yilin Yang
+   * Scrolling, playback optimizations, and play/pause icons written/programmed by Michael DiFranco
+   * Shuffle functionality and disco lights programmed by Collin Hamilton
+* External wiring (headphone jack, piezoelectric buzzer, power supply, etc.) completed by Collin Hamilton
+
+GitHub - The code written for this project is available on GitHub at: https://github.com/pi-or-tau/ArduiNote-An-Intel-Galileo-Music-Player
+
+External Libraries
+* python-midi library written by “vishnubob”
+   * https://github.com/vishnubob/python-midi
+* RGB_LCD
+   * From Grove Electronics
+* Wire
+   * Core Arduino Library
